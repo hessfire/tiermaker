@@ -67,7 +67,7 @@ async function deezer_artworks(artistId) {
 }
   
 document.addEventListener('DOMContentLoaded', function() {
-	search_artists_by_name(window.location.pathname.substring(1)).then((artist_id) => {
+	search_artists_by_name((new URLSearchParams(window.location.search)).get('q')).then((artist_id) => {
 		deezer_artworks(artist_id).then((data) => {
 			source = document.getElementsByClassName("source")[0];
 	
