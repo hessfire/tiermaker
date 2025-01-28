@@ -1,0 +1,165 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Ubuntu+Sans+Mono:ital,wght@0,400..700;1,400..700&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+
+body {
+  font: 24px "Ubuntu Sans Mono", sans-serif;
+  background-color: rgb(32, 33, 36);
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  transition: all 0.1s;
+  color: white;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: rgb(32, 33, 36);
+  margin-top: auto;
+}
+
+body::after {
+  margin-bottom: auto;
+}
+
+.tiers {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  color: rgba(255, 255, 255, 0.7509803922);
+}
+
+.tier_s {
+  width: 64px;
+  height: auto;
+  min-height: 64px;
+  background-color: rgba(255, 0, 0, 0.233);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tier_a {
+  width: 64px;
+  min-width: 64px;
+  height: auto;
+  min-height: 64px;
+  background-color: rgba(255, 238, 0, 0.233);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tier_b {
+  width: 64px;
+  min-width: 64px;
+  height: auto;
+  min-height: 64px;
+  background-color: rgba(102, 255, 0, 0.233);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tier_c {
+  width: 64px;
+  min-width: 64px;
+  height: auto;
+  min-height: 64px;
+  background-color: rgba(0, 225, 255, 0.233);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tier_d {
+  width: 64px;
+  min-width: 64px;
+  height: auto;
+  min-height: 64px;
+  background-color: rgba(0, 68, 255, 0.233);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dropzone {
+  min-width: 960px;
+  min-height: 64px;
+
+  max-height: fit-content;
+  max-width: 960px;
+
+  background-color: #494949;
+  resize: vertical;
+  overflow: auto;
+
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.source {
+  font-size: 0;
+  min-width: 960px;
+  min-height: 64px;
+  max-height: fit-content;
+  max-width: fit-content;
+  width: 640px;
+  height: auto;
+  background-color: #494949;
+  resize: both;
+  overflow: auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.loading {
+  background-color: rgb(0, 0, 0, 0.2);
+  backdrop-filter: blur(15px);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s;
+}
+
+.loading.hidden {
+  opacity: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.title {
+  width: 100%;
+  height: 100%;
+  font-size: 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: 64px;
+  overflow-wrap: break-word;
+}
+
+.elemdiv {
+  display:flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  min-width: 64px;
+  min-height: 64px;
+  max-width: 64px;
+  max-height: 64px;
+}
+
+img { 
+  opacity: 0.5; 
+} 
