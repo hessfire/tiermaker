@@ -4,7 +4,6 @@ body {
   font: 24px "Ubuntu Sans Mono", sans-serif;
   background-color: rgb(32, 33, 36);
   display: flex;
-  /* justify-content: center; */
   align-items: center;
   flex-direction: column;
   height: 100vh;
@@ -88,6 +87,17 @@ body::after {
   justify-content: center;
 }
 
+.tier_idk {
+  width: 64px;
+  min-width: 64px;
+  height: auto;
+  min-height: 64px;
+  background-color: rgba(255, 255, 255, 0.233);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .dropzone {
   min-width: 960px;
   min-height: 64px;
@@ -96,7 +106,6 @@ body::after {
   max-width: 960px;
 
   background-color: #494949;
-  resize: vertical;
   overflow: auto;
 
   display: flex;
@@ -112,7 +121,7 @@ body::after {
   width: 640px;
   height: auto;
   background-color: #494949;
-  resize: both;
+  resize: horizontal;
   overflow: auto;
   display: flex;
   flex-wrap: wrap;
@@ -147,6 +156,8 @@ body::after {
   left: 0;
   max-width: 64px;
   overflow-wrap: break-word;
+  text-shadow: 3px 3px 3px black;
+  font-weight: 900;
 }
 
 .elemdiv {
@@ -160,6 +171,32 @@ body::after {
   max-height: 64px;
 }
 
-img { 
+/* .artwork { 
   opacity: 0.5; 
-} 
+}  */
+
+.actions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(55, 57, 62, 0.8);
+  color: white;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.player {
+  position: fixed;
+  bottom: 42px;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  display: none;
+}
+
+.player_image {
+  width: 300px;
+  height: 300px;
+}

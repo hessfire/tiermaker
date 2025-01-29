@@ -19,55 +19,63 @@ function jsonp_request(url) {
   }
 
 async function search_artists_by_name(artist_name) {
+	if (/^-?\d+$/.test(artist_name)) return artist_name;
 	const artist_response = await jsonp_request(`https://api.deezer.com/search?output=jsonp&q=artist:%22${artist_name}%22`);
 	for (const thing of artist_response.data) {
-		if (thing.artist.name.toLowerCase().includes(artist_name.toLowerCase())) return thing.artist.id;
+		if (thing.artist.name.toLowerCase() === artist_name.toLowerCase()) return thing.artist.id;
 	}
 	return 0;
 }
 
-async function deezer_artworks(artistId) {
-	const result = {};
-	let artist_name = ""; 
-	let url = `https://api.deezer.com/artist/${artistId}/albums?output=jsonp`;
-  
-	try {
-	  const artist_response = await jsonp_request(`https://api.deezer.com/artist/${artistId}?output=jsonp`);
-	  artist_name = artist_response.name;
-	  console.log(`artist name: ${artist_name}`);
-	  document.title = `${artist_name} tiermaker`
-  
-	  while (url) {
-		const album_response = await jsonp_request(url);
-  
-		for (const album of album_response.data) {
-		  const tracklist_url = `${album.tracklist}?output=jsonp`;
-		  const tracklist = await jsonp_request(tracklist_url);
-  
-		  //if (Object.keys(result).length >= 3) break;
+async function deezer_artworks(artist_id) {
+  const result = {};
+  let artist_name = "";
+  let url = `https://api.deezer.com/artist/${artist_id}/albums?output=jsonp`;
 
-		  if (tracklist.total === 1) {
-			result[album.id] = [album.title, album.cover_medium];
-			continue;
-		  }
-  
-		  for (const track of tracklist.data) {
-			if (track.title in result) continue;
-			result[track.id] = [track.title, album.cover_medium];
-		  }
-		}
-  
-		url = album_response.next ? `${album_response.next}&output=jsonp` : null;
-	  }
-  
-	  return result;
-	} catch (error) {
-	  throw new Error(error);
-	}
+  try {
+    const artist_response = await jsonp_request(`https://api.deezer.com/artist/${artist_id}?output=jsonp`);
+    artist_name = artist_response.name;
+    document.title = `${artist_name} tiermaker`;
+
+    while (url) {
+      const album_response = await jsonp_request(url);
+
+      for (const album of album_response.data) {
+        let tracklist_url = `${album.tracklist}?output=jsonp`;
+        let tracklist = await jsonp_request(tracklist_url);
+
+        const all_tracks = [];
+
+        while (tracklist) {
+          all_tracks.push(...tracklist.data);
+          tracklist_url = tracklist.next ? `${tracklist.next}&output=jsonp` : null;
+          tracklist = tracklist_url ? await jsonp_request(tracklist_url) : null;
+        }
+
+        if (all_tracks.length === 1) {
+          result[album.id] = [album.title, album.cover_medium, all_tracks[0].preview];
+          continue;
+        }
+
+        for (const track of all_tracks) {
+          if (track.title in result) continue;
+          result[track.id] = [track.title, album.cover_medium, track.preview];
+        }
+      }
+
+      url = album_response.next ? `${album_response.next}&output=jsonp` : null;
+    }
+
+    return result;
+  } catch (error) {
+    throw new Error(error);
+  }
 }
+
   
 document.addEventListener('DOMContentLoaded', function() {
-	search_artists_by_name((new URLSearchParams(window.location.search)).get('q')).then((artist_id) => {
+	var url_params = new URLSearchParams(window.location.search);
+	search_artists_by_name(url_params.get('q')).then((artist_id) => {
 		deezer_artworks(artist_id).then((data) => {
 			source = document.getElementsByClassName("source")[0];
 	
@@ -78,6 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	
 				var img = document.createElement('img');
 				img.src = release[1][1];
+				img.className = "artwork";
 				img.width = 64;
 				img.height = 64;
 	
@@ -87,7 +96,13 @@ document.addEventListener('DOMContentLoaded', function() {
 				title.draggable = true;
 				title.addEventListener("dragstart", dragStart);
 	
+				var preview_url = document.createElement('a');
+				preview_url.href = release[1][2];
+				preview_url.className = "preview_url";
+				preview_url.style = "font-size: 0px; display: none;"
+
 				div.appendChild(img);
+				div.appendChild(preview_url);
 				div.appendChild(title);
 	
 				source.appendChild(div);
@@ -120,6 +135,28 @@ function dragStart(ev) {
 
 function dragDrop(ev) {
 	ev.preventDefault();
+	var data = ev.dataTransfer.getData("text");
+
+	if (ev.target.classList.contains("actions") || (ev.target.id && ev.target.id.includes("action"))) {
+		const audio = document.getElementById("audio_player");
+        const source = document.getElementById("audio_src");
+		const player_image = document.getElementById("player_image");
+		const player_div = document.getElementsByClassName("player")[0];
+		player_div.style = "display: flex;";
+
+		player_image.src = document.getElementById(data).getElementsByClassName("artwork")[0].src;
+		var preview_url = document.getElementById(data).getElementsByClassName("preview_url")[0].href;
+		source.src = preview_url;
+		audio.load();
+		audio.volume = 0.1;
+		audio.play();
+
+		audio.addEventListener("pause", function() { 
+			player_div.style = "display: none;";
+		});
+
+		return;
+	}
 
 	if (ev.target.className.includes("tier_")) return;
 
@@ -130,7 +167,6 @@ function dragDrop(ev) {
 		return;
 	}
 
-	var data = ev.dataTransfer.getData("text");
 	console.log(data);
 	ev.target.appendChild(document.getElementById(data));
 }
