@@ -74,7 +74,7 @@ async function deezer_artworks(artist_id) {
 
   
 document.addEventListener('DOMContentLoaded', function() {
-	if (window.location.seaarh === undefined) {
+	if (window.location.search === undefined || window.location.search === "") {
 		document.getElementById("loading_text").style = "display: none;";
 		document.getElementsByClassName("search")[0].style = "display: flex;";
 		return;
