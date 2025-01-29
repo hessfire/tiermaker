@@ -152,6 +152,7 @@ function dragDrop(ev) {
 		audio.play();
 
 		audio.addEventListener("pause", function() { 
+			if (audio.seeking) return;
 			player_div.style = "display: none;";
 		});
 
