@@ -158,6 +158,7 @@ body::after {
   overflow-wrap: break-word;
   text-shadow: 3px 3px 3px black;
   font-weight: 900;
+  overflow: hidden;
 }
 
 .elemdiv {
