@@ -74,6 +74,12 @@ async function deezer_artworks(artist_id) {
 
   
 document.addEventListener('DOMContentLoaded', function() {
+	if (window.location.seaarh === undefined) {
+		document.getElementById("loading_text").style = "display: none;";
+		document.getElementsByClassName("search")[0].style = "display: flex;";
+		return;
+	}
+
 	var url_params = new URLSearchParams(window.location.search);
 	search_artists_by_name(url_params.get('q')).then((artist_id) => {
 		deezer_artworks(artist_id).then((data) => {
@@ -170,4 +176,10 @@ function dragDrop(ev) {
 
 	console.log(data);
 	ev.target.appendChild(document.getElementById(data));
+}
+
+function search(element) {
+	if (event.key === 'Enter') {
+		window.location.href = `${window.location.origin}${window.location.pathname}?q=${element.value}`;
+	}
 }
